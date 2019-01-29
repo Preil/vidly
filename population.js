@@ -42,7 +42,8 @@ async function createCourse(name, author) {
 async function listCourses() {
     const courses = await Course
         .find()
-        .populate('author', 'name -_id') - // here we populating course objects with authors objects
+        .populate('author', 'name -_id')  // here we populating course objects with authors objects
+        // .populate ('category', 'name') // can be other referenced objects added
         .select('name author');
     console.log(courses);
 }
