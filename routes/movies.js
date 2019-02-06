@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    const movies = await Movie.find().sort('name');
+    const movies = await Movie.find().sort('title');
     res.send(movies);
 });
 
@@ -38,7 +38,7 @@ router.put('/:id', async (req, res) => {
 
     const movie = await Movie.findByIdAndUpdate(req.params.id,
         {
-            title: req.body.name,
+            title: req.body.title,
             genre: {
                 _id: genre._id,
                 name: genre.name
