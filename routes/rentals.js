@@ -4,24 +4,25 @@ const {Customer} = require('../models/customer');
 
 const mongoose = require('mongoose');
 const express = require('express');
-const router = express.Router(express);
+const router = express.Router();
 
-router.get('/', async (res, req) => {
+router.get('/', async (req, res) => {
     const rentals = await Rental.find().sort('-dateOut');
+    if(!rentals) return res.status(404).send('No rentals found');
     res.send(rentals);
 });
 
-router.post('/', async (res, req) =>{
+router.post('/', async (req, res) => {
     const {error} = validate(req.body);
-    if (error) return res.status(400).send(error).message(error.detail[0].message);
+    if (error) return res.status(400).send(error).message(error.details[0].message);
 
     const customer = await Customer.findById(req.body.customerId);
-    if(!customer) return res.status(400).send('Invalid customer');
+    if (!customer) return res.status(400).send('Invalid customer');
 
-    const movie = Movie.findById(req.body.movieId);
+    const movie = await Movie.findById(req.body.movieId);
     if (!movie) return res.status(400).send('Invalide movie');
 
-    if (movie.numberInstock ===0) return res.status(400).send('Movie is not available');
+    if (movie.numberInstock === 0) return res.status(400).send('Movie is not available');
 
     let rental = new Rental({
         customer: {
@@ -36,9 +37,9 @@ router.post('/', async (res, req) =>{
         }
     });
     rental.save();
-    movie.numberInstock--;
-    movie.save();
+    movie.numberInStock--;
+    await movie.save();
     res.send(rental);
 });
 
-exports.router;
+module.exports = router;
