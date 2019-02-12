@@ -5,7 +5,7 @@ const genres = require('./routes/genres');
 const movies = require('./routes/movies');
 const customers = require('./routes/customers');
 const rentals = require('./routes/rentals');
-const users = require('./routers/users');
+const users = require('./routes/users');
 const express = require('express');
 const app = express();
 
